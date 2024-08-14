@@ -59,7 +59,7 @@ const SignUp = () => {
         toast.error(dataRes.message);
       }
     } else {
-      console.log('Please confirm password');
+      toast.error('Passwords do not match!');
     }
   };
   return (
