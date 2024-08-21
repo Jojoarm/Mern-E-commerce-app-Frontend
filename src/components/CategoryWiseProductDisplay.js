@@ -2,15 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import fetchCategoryWiseProduct from '../helpers/fetchCategoryWisePeroduct';
 import displayNIGCurrency from '../helpers/displayCurrency';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
 import addToCart from '../helpers/addToCart';
+import { Link } from 'react-router-dom';
 import Context from '../context';
 
-const HorizontalCardProduct = ({ category, heading }) => {
+const CategoryWiseProductDisplay = ({ category, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const loadingList = new Array(13).fill(null);
-  const [scroll, setScroll] = useState(0);
 
   const { fetchUserAddToCartCount } = useContext(Context);
 
@@ -18,8 +16,6 @@ const HorizontalCardProduct = ({ category, heading }) => {
     await addToCart(e, id);
     fetchUserAddToCartCount();
   };
-
-  const scrollElement = useRef();
 
   const fetchData = async () => {
     setLoading(true);
@@ -32,34 +28,10 @@ const HorizontalCardProduct = ({ category, heading }) => {
     fetchData();
   }, []);
 
-  const scrollRight = () => {
-    scrollElement.current.scrollLeft += 300;
-  };
-
-  const scrollLeft = () => {
-    scrollElement.current.scrollLeft -= 300;
-  };
-
   return (
     <div className="container mx-auto px-4 my-6 relative">
       <h2 className="text-2xl font-semibold py-4">{heading}</h2>
-      <div
-        className="flex items-center gap-4 md:gap-6 overflow-scroll scrollbar-none transition-all"
-        ref={scrollElement}
-      >
-        <button
-          className="bg-white shadow-md rounded-full absolute left-0 text-lg hidden md:block"
-          onClick={scrollLeft}
-        >
-          <FaAngleLeft />
-        </button>
-        <button
-          className="bg-white shadow-md rounded-full absolute right-0 text-lg hidden md:block"
-          onClick={scrollRight}
-        >
-          <FaAngleRight />
-        </button>
-
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,320px))] justify-between md:gap-6 overflow-x-scroll scrollbar-none transition-all">
         {loading ? (
           <p>Loading...</p>
         ) : (
@@ -67,18 +39,18 @@ const HorizontalCardProduct = ({ category, heading }) => {
             return (
               <Link
                 to={'product/' + product?._id}
-                className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white rounded-sm shadow flex"
+                className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-sm shadow"
                 key={product + index}
               >
-                <div className="bg-slate-300 h-full p-4 min-w-[120px] md:min-w-[145px]">
+                <div className="bg-slate-300 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
                   <img
                     src={product.productImage[0]}
                     alt={product.productImage[0]}
-                    className="object-scale-down h-full hover:scale-110 transition-all"
+                    className="object-scale-down h-full hover:scale-110 transition-all mix-blend-multiply"
                   />
                 </div>
 
-                <div className="p-2 grid">
+                <div className="p-2 grid gap-3">
                   <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black">
                     {product?.productName}
                   </h2>
@@ -109,4 +81,4 @@ const HorizontalCardProduct = ({ category, heading }) => {
   );
 };
 
-export default HorizontalCardProduct;
+export default CategoryWiseProductDisplay;

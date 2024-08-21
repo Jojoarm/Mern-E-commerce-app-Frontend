@@ -1,13 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import fetchCategoryWiseProduct from '../helpers/fetchCategoryWisePeroduct';
 import displayNIGCurrency from '../helpers/displayCurrency';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import addToCart from '../helpers/addToCart';
+import { Link } from 'react-router-dom';
+import Context from '../context';
 
 const VerticalCardProduct = ({ category, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   //   const loadingList = new Array(13).fill(null);
   const [scroll, setScroll] = useState(0);
+
+  const { fetchUserAddToCartCount } = useContext(Context);
+
+  const handleAddToCart = async (e, id) => {
+    await addToCart(e, id);
+    fetchUserAddToCartCount();
+  };
 
   const scrollElement = useRef();
 
@@ -55,7 +65,11 @@ const VerticalCardProduct = ({ category, heading }) => {
         ) : (
           data.map((product, index) => {
             return (
-              <div className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-sm shadow">
+              <Link
+                to={'product/' + product?._id}
+                className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-sm shadow"
+                key={product + index}
+              >
                 <div className="bg-slate-300 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
                   <img
                     src={product.productImage[0]}
@@ -79,11 +93,14 @@ const VerticalCardProduct = ({ category, heading }) => {
                       {displayNIGCurrency(product?.price)}
                     </p>
                   </div>
-                  <button className="text-sm bg-red-500 hover:bg-red-700 text-white px-3 py-0.5 rounded-full">
+                  <button
+                    className="text-sm bg-red-500 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
+                    onClick={(e) => handleAddToCart(e, product?._id)}
+                  >
                     Add to Cart
                   </button>
                 </div>
-              </div>
+              </Link>
             );
           })
         )}

@@ -23,7 +23,7 @@ const CategoryProductList = () => {
     <div className="container mx-auto p-4">
       <div className="flex items-center gap-4 justify-between overflow-scroll scrollbar-none">
         {loading
-          ? categoryLoading.map((el, index) => {
+          ? categoryLoading?.map((el, index) => {
               return (
                 <div
                   className="h-16 w-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-slate-300 animate-pulse"
@@ -31,7 +31,7 @@ const CategoryProductList = () => {
                 ></div>
               );
             })
-          : categoryProduct.map((product, index) => {
+          : categoryProduct?.map((product, index) => {
               return (
                 <Link
                   to={'/product-category/' + product?.category}
