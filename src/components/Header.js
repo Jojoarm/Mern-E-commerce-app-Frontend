@@ -3,7 +3,7 @@ import Logo from './Logo';
 import { BsSearch } from 'react-icons/bs';
 import { FaCircleUser } from 'react-icons/fa6';
 import { FaShoppingCart } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, redirect, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import SummaryApi from '../common';
 import { toast } from 'react-toastify';
@@ -16,6 +16,11 @@ const Header = () => {
   const dispatch = useDispatch();
   const [menuDisplay, setMenuDisplay] = useState(false);
   const context = useContext(Context);
+  const navigate = useNavigate();
+  const searchInput = useLocation();
+  const [search, setSearch] = useState(searchInput?.search.split('=')[1]);
+
+  // console.log('searchInput', );
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -32,6 +37,16 @@ const Header = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const { value } = e.target;
+    setSearch(value);
+    if (value) {
+      navigate(`/search?q=${value}`);
+    } else {
+      navigate('/search');
+    }
+  };
+
   return (
     <header className="h-16 shadow-md bg-white fixed w-full z-40">
       <div className="h-full container mx-auto flex items-center px-4 justify-between">
@@ -45,8 +60,13 @@ const Header = () => {
             type="text"
             placeholder="Search product here..."
             className="w-full outline-none"
+            onChange={handleSearch}
+            value={search}
           />
-          <div className="text-lg min-w-[50px] bg-red-600 h-8 flex items-center justify-center rounded-r-full text-white">
+          <div
+            className="text-lg min-w-[50px] bg-red-600 h-8 flex items-center justify-center rounded-r-full text-white cursor-pointer"
+            onClick={handleSearch}
+          >
             <BsSearch />
           </div>
         </div>
